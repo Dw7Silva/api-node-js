@@ -31,10 +31,36 @@ module.exports = {
     }, 
     async cadastrarDemandas(request, response) {
         try {
+
+            const {amen_id, quantidade, preco_maximo, data_entrega, informacoes, data_publi, ativa} = request.body;
+
+            //instruções sql
+            const sql = `
+                INSERT INTO DEMANDAS
+                    (amen_id, demanda_quantidade, demanda_preco_maximo, demanda_data_entrega, demanda_outras_informacoes, demanda_data_publicacao, demanda_ativa) 
+                VALUES
+                    (?, ? ,? ,? ,? ,? ,?);
+            `;
+
+            const values = [amen_id, quantidade, preco_maximo, data_entrega, informacoes, data_publi, ativa];
+            
+            const [result] = await db.query(sql, values);
+
+            const dados= {
+                id: result.insertId,
+                amen_id,
+                quantidade,
+                preco_maximo,
+                data_entrega,
+                informacoes,
+                data_publi,
+                ativa
+            };
+
             return response.status(200).json({
                 sucesso: true, 
                 mensagem: 'Cadastro de Demandas', 
-                dados: null
+                dados: dados
             });
         } catch (error) {
             return response.status(500).json({

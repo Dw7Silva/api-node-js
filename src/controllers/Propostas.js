@@ -3,10 +3,22 @@ const db = require('../dataBase/connection');
 module.exports = {
     async listarPropostas(request, response) {
         try {
+
+            const sql = `
+            SELECT
+                prop_id, negoc_id, emp_id, prop_preco, 
+                prop_quantidade, prop_data_envio, prop_status 
+            FROM PROPOSTA;
+                        `;
+            
+            const [rows] = await db.query(sql);
+
+            const nRegistros = rows.length;
+
             return response.status(200).json({
                 sucesso: true, 
                 mensagem: 'Lista de Propostas', 
-                dados: null
+                dados: rows
             });
         } catch (error) {
             return response.status(500).json({
