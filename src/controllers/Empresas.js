@@ -30,10 +30,33 @@ module.exports = {
     }, 
     async cadastrarEmpresas(request, response) {
         try {
+
+            const {razao_social, nome_fantasia, tipo_atividade, telefone, email} = request.body;
+
+            //instruções sql
+            const sql = `
+                INSERT INTO EMPRESAS
+                    (emp_razao_social, emp_nome_fantasia, emp_tipo_atividade, emp_telefone, emp_email) 
+                VALUES
+                    (?, ?, ? ,? ,?);
+            `;
+
+            const values = [razao_social, nome_fantasia, tipo_atividade, telefone, email];
+            
+            const [result] = await db.query(sql, values);
+
+            const dados= {
+                razao_social, 
+                nome_fantasia, 
+                tipo_atividade, 
+                telefone, 
+                email
+            };
+
             return response.status(200).json({
                 sucesso: true, 
                 mensagem: 'Cadastro de Empresas', 
-                dados: null
+                dados: dados
             });
         } catch (error) {
             return response.status(500).json({

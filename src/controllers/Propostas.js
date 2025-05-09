@@ -30,10 +30,34 @@ module.exports = {
     }, 
     async cadastrarPropostas(request, response) {
         try {
+
+            const {negoc_id, emp_id, preco, quantidade, data_envio, status} = request.body;
+
+            //instruções sql
+            const sql = `
+                INSERT INTO PROPOSTA
+                    (negoc_id, emp_id, prop_preco, prop_quantidade, prop_data_envio, prop_status) 
+                VALUES
+                    (?, ?, ? ,? ,?, ?);
+            `;
+
+            const values = [negoc_id, emp_id, preco, quantidade, data_envio, status];
+            
+            const [result] = await db.query(sql, values);
+
+            const dados= {
+                negoc_id, 
+                emp_id, 
+                preco, 
+                quantidade, 
+                data_envio, 
+                status
+            };
+
             return response.status(200).json({
                 sucesso: true, 
                 mensagem: 'Cadastro de Propostas', 
-                dados: null
+                dados: dados
             });
         } catch (error) {
             return response.status(500).json({
