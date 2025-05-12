@@ -7,17 +7,17 @@ const PropostasController = require('../controllers/Propostas');
 
 router.get('/empresas', EmpresasController.listarEmpresas); 
 router.post('/empresas', EmpresasController.cadastrarEmpresas); 
-router.patch('/empresas', EmpresasController.editarEmpresas); 
+router.patch('/empresas/:id', EmpresasController.editarEmpresas); 
 router.delete('/empresas', EmpresasController.apagarEmpresas); 
 
 router.get('/demandas', DemandasController.listarDemandas); 
 router.post('/demandas', DemandasController.cadastrarDemandas); 
-router.patch('/demandas', DemandasController.editarDemandas); 
+router.patch('/demandas/:id', DemandasController.editarDemandas); 
 router.delete('/demandas', DemandasController.apagarDemandas); 
 
 router.get('/propostas', PropostasController.listarPropostas); 
 router.post('/propostas', PropostasController.cadastrarPropostas); 
-router.patch('/propostas', PropostasController.editarPropostas); 
+router.patch('/propostas/:id', PropostasController.editarPropostas); 
 router.delete('/propostas', PropostasController.apagarPropostas);
 
 

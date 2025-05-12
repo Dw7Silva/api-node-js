@@ -69,19 +69,40 @@ module.exports = {
     }, 
     async editarPropostas(request, response) {
         try {
+            const id = request.params.id;
+    
+            const { negoc_id, emp_id, preco, quantidade, data_envio, status } = request.body;
+    
+            const sql = `
+                UPDATE PROPOSTA
+                SET
+                    negoc_id = ?,
+                    emp_id = ?,
+                    prop_preco = ?,
+                    prop_quantidade = ?,
+                    prop_data_envio = ?,
+                    prop_status = ?
+                WHERE
+                    prop_id = ?
+            `;
+    
+            const dados = [negoc_id, emp_id, preco, quantidade, data_envio, status, id];
+    
+            const [result] = await db.query(sql, dados);
+    
             return response.status(200).json({
-                sucesso: true, 
-                mensagem: 'Alteração no cadastro de Propostas', 
-                dados: null
+                sucesso: true,
+                mensagem: 'Alteração no cadastro de Propostas',
+                dados: result
             });
         } catch (error) {
             return response.status(500).json({
-                sucesso: false, 
-                mensagem: 'Erro na requisição.', 
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
                 dados: error.message
             });
         }
-    }, 
+    },
     async apagarPropostas(request, response) {
         try {
             return response.status(200).json({

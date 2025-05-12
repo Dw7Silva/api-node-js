@@ -68,19 +68,42 @@ module.exports = {
     }, 
     async editarEmpresas(request, response) {
         try {
-            return response.status(200).json({
-                sucesso: true, 
-                mensagem: 'Alteração no cadastro de Empresas', 
-                dados: null
-            });
+            const id = request.params.id;
+    
+            const { razao_social, nome_fantasia, tipo_atividade, telefone, email } = request.body;
+    
+            const sql = `
+                UPDATE EMPRESAS
+                SET
+                    emp_razao_social = ?,
+                    emp_nome_fantasia = ?,
+                    emp_tipo_atividade = ?,
+                    emp_telefone = ?,
+                    emp_email = ?
+                WHERE
+                    emp_id = ?
+            `;
+    
+            const dados = [razao_social, nome_fantasia, tipo_atividade, telefone, email, id];
+    
+            await db.query(sql, dados);
+    
+            const [result] = await db.query(sql, dados);
+
+        
+        return response.status(200).json({
+            sucesso: true,
+            mensagem: 'Alteração no cadastro de Empresas',
+            dados: result
+        });
         } catch (error) {
             return response.status(500).json({
-                sucesso: false, 
-                mensagem: 'Erro na requisição.', 
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
                 dados: error.message
             });
         }
-    }, 
+    },    
     async apagarEmpresas(request, response) {
         try {
             return response.status(200).json({
