@@ -72,32 +72,92 @@ module.exports = {
     }, 
     async editarDemandas(request, response) {
         try {
+            const id = request.params.id;
+    
+            const {
+                emp_id,
+                amen_id,
+                quantidade,
+                preco_maximo,
+                data_entrega,
+                informacoes,
+                data_publi,
+                ativa
+            } = request.body;
+    
+            const sql = `
+                UPDATE DEMANDAS
+                SET
+                    emp_id = ?,
+                    amen_id = ?,
+                    demanda_quantidade = ?,
+                    demanda_preco_maximo = ?,
+                    demanda_data_entrega = ?,
+                    demanda_outras_informacoes = ?,
+                    demanda_data_publicacao = ?,
+                    demanda_ativa = ?
+                WHERE
+                    demanda_id = ?
+            `;
+    
+            const values = [
+                emp_id,
+                amen_id,
+                quantidade,
+                preco_maximo,
+                data_entrega,
+                informacoes,
+                data_publi,
+                ativa,
+                id
+            ];
+    
+            const [rows] = await db.query(sql, values);
+    
             return response.status(200).json({
-                sucesso: true, 
-                mensagem: 'Alteração no cadastro de Demandas', 
-                dados: null
+                sucesso: true,
+                mensagem: 'Alteração no cadastro de Demandas',
+                dados: rows // <- aqui vem affectedRows, changedRows, etc.
             });
         } catch (error) {
             return response.status(500).json({
-                sucesso: false, 
-                mensagem: 'Erro na requisição.', 
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
                 dados: error.message
             });
         }
-    }, 
+    },
+    
     async apagarDemandas(request, response) {
         try {
+            const { id } = request.params;
+    
+            const sql = `DELETE FROM demandas WHERE demanda_id = ?`; // coloque entre crases
+    
+            const values = [id];
+    
+            const [result] = await db.query(sql, values);
+    
+            if (result.affectedRows === 0) {
+                return response.status(404).json({
+                    sucesso: false,
+                    mensagem: `Demanda ${id} não encontrada`, // corrigido: template string e nome da variável
+                });
+            }
+    
             return response.status(200).json({
-                sucesso: true, 
-                mensagem: 'Exclusão de Demandas', 
+                sucesso: true,
+                mensagem: `Demanda ${id} excluída com sucesso`,
                 dados: null
             });
+    
         } catch (error) {
             return response.status(500).json({
-                sucesso: false, 
-                mensagem: 'Erro na requisição.', 
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
                 dados: error.message
             });
         }
-    }, 
+    },
+    
 };  

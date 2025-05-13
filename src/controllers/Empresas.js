@@ -106,17 +106,35 @@ module.exports = {
     },    
     async apagarEmpresas(request, response) {
         try {
+    
+            const { id } = request.params;
+    
+            const sql = `DELETE FROM EMPRESAS WHERE emp_id = ?`;
+    
+            const values = [id];
+    
+            const [result] = await db.query(sql, values);
+    
+            if (result.affectedRows === 0) {
+                return response.status(404).json({
+                    sucesso: false,
+                    mensagem: `Empresa ${id} não encontrada`,
+                });
+            }
+    
             return response.status(200).json({
-                sucesso: true, 
-                mensagem: 'Exclusão de Empresas', 
+                sucesso: true,
+                mensagem: `Empresa ${id} excluída com sucesso`,
                 dados: null
             });
+    
         } catch (error) {
             return response.status(500).json({
-                sucesso: false, 
-                mensagem: 'Erro na requisição.', 
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
                 dados: error.message
             });
         }
-    }, 
+    },
+    
 };  
